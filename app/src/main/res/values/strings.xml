@@ -2,4 +2,7 @@
     <string name="app_name">BookListMainApplication</string>
     <string name="textview">TextView</string>
     <string name="todo">TODO</string>
+    <string name="textviewName">TextView</string>
+    <string name="ok">Button</string>
+    <string name="price">Name</string>
 </resources>
