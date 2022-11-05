@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">BookListMainApplication</string>
-    <string name="textview">TextView</string>
     <string name="todo">TODO</string>
     <string name="confirmation">Confirmation</string>
     <string name="sure_to_delete">"Are you sure to delete "</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="textview">TextView</string>
+    <string name="textview1">Title</string>
+    <string name="name">Name</string>
+    <string name="button1">No</string>
+    <string name="button2">Yes</string>
 </resources>

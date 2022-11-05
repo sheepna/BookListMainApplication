@@ -14,6 +14,9 @@
         android:theme="@style/Theme.BookListMainApplication"
         tools:targetApi="31">
         <activity
+            android:name=".EditBookActivity"
+            android:exported="false" />
+        <activity
             android:name=".BookListMainActivity"
             android:exported="true">
             <intent-filter>
