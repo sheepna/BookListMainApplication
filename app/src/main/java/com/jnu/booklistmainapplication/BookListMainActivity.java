@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jnu.booklistmainapplication.Data.Book;
+import com.jnu.booklistmainapplication.Data.DataSaver;
 
 import java.util.ArrayList;
 
@@ -41,6 +42,7 @@ public class BookListMainActivity extends AppCompatActivity {
                         String title= bundle.getString("title");
                         int position=bundle.getInt("position");
                         books.add(position, new Book(title,R.drawable.book_no_name) );
+                        new DataSaver().Save(BookListMainActivity.this,books);
                         mainRecycleViewAdapter.notifyItemInserted(position);
                     }
                 }
@@ -58,6 +60,8 @@ public class BookListMainActivity extends AppCompatActivity {
 
         books=new ArrayList<>();
 
+        DataSaver dataSaver=new DataSaver();
+        books=dataSaver.Load(BookListMainActivity.this);
         getListBooks();
 
         mainRecycleViewAdapter= new MainRecycleViewAdapter(books);
@@ -85,6 +89,7 @@ public class BookListMainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 books.remove(item.getOrder());
+                                new DataSaver().Save(BookListMainActivity.this,books);
                                 mainRecycleViewAdapter.notifyItemRemoved(item.getOrder());
                             }
                         }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

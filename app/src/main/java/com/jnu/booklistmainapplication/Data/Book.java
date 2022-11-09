@@ -1,6 +1,8 @@
 package com.jnu.booklistmainapplication.Data;
 
-public class Book {
+import java.io.Serializable;
+
+public class Book implements Serializable {
 
     private String title;
     private int resourceId;
