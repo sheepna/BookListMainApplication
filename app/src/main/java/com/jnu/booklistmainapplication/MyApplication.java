@@ -1,14 +1,11 @@
 package com.jnu.booklistmainapplication;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Application;
-import android.os.Bundle;
 
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 
-public class MapActivity extends Application {
+public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();

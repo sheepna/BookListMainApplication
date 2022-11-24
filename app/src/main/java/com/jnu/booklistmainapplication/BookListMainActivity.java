@@ -42,10 +42,13 @@ public class BookListMainActivity extends AppCompatActivity {
 
         @NonNull
         @Override
+        //Fragment在生命周期中会被销毁和创建，因此不要用列表
         public Fragment createFragment(int position) {
             switch (position){
                 case 0:
                     return BookListFragment.newInstance();
+                case 1:
+                    return BaiduMapFragment.newInstance();
                 case 2:
                     return BrowserFragment.newInstance();
             }
@@ -67,6 +70,7 @@ public class BookListMainActivity extends AppCompatActivity {
         viewPager2Main.setAdapter(new PageViewFragmentAdapter(getSupportFragmentManager(),getLifecycle()));
 
         TabLayout tabLayout=findViewById(R.id.tablayout_header);
+        //媒介，将TabLayout和ViewPager2联系起来
         TabLayoutMediator tabLayoutMediator=new TabLayoutMediator(tabLayout, viewPager2Main, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
@@ -84,7 +88,7 @@ public class BookListMainActivity extends AppCompatActivity {
             }
         });
         tabLayoutMediator.attach();
-    }
+    }//调用attach才会生效
 
     //在Activity中重载onContextItemSelected
 
