@@ -17,11 +17,6 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link BaiduMapFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class BaiduMapFragment extends Fragment {
 
     private MapView mapView;
@@ -56,14 +51,14 @@ public class BaiduMapFragment extends Fragment {
         builder.zoom(18.0f);
         mapView.getMap().setMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
 
-        LatLng cenpt = new LatLng(22.255925,113.541112);
+        //LatLng cenpt = new LatLng(22.255925,113.541112);
         //定义地图状态
-        MapStatus mMapStatus = new MapStatus.Builder()
-                .target(cenpt)
-                .zoom(18)
-                .build();
+        //MapStatus mMapStatus = new MapStatus.Builder()
+               // .target(cenpt)
+                //.zoom(18)
+                //.build();
         //定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
-        mapView.getMap().setMapStatus(MapStatusUpdateFactory.newMapStatus(mMapStatus));
+        //apView.getMap().setMapStatus(MapStatusUpdateFactory.newMapStatus(mMapStatus));
 
         //BitmapDescriptor bitmap= BitmapDescriptorFactory.fromResource(R.drawable.ic_location);
         //OverlayOptions options=new MarkerOptions().position(cenpt).icon(bitmap);
