@@ -60,9 +60,11 @@ public class BaiduMapFragment extends Fragment {
         //定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
         mapView.getMap().setMapStatus(MapStatusUpdateFactory.newMapStatus(mMapStatus));
 
-        //BitmapDescriptor bitmap= BitmapDescriptorFactory.fromResource(R.drawable.ic_location);
-        //OverlayOptions options=new MarkerOptions().position(cenpt).icon(bitmap);
-        //mapView.getMap().addOverlay(options);
+        BitmapDescriptor bitmap= BitmapDescriptorFactory.fromResource(R.mipmap.ic_lo);
+        OverlayOptions options = new MarkerOptions().position(cenpt).icon(bitmap);
+        //将maker添加到地图
+        mapView.getMap().addOverlay(options);
+
         return rootView;
     }
     @Override
