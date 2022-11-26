@@ -7,15 +7,23 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.TextOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.jnu.booklistmainapplication.Data.HttpDataLoader;
+import com.jnu.booklistmainapplication.Data.ShopLocation;
+
+import java.util.List;
 
 public class BaiduMapFragment extends Fragment {
 
@@ -60,11 +68,36 @@ public class BaiduMapFragment extends Fragment {
         //定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
         mapView.getMap().setMapStatus(MapStatusUpdateFactory.newMapStatus(mMapStatus));
 
-        BitmapDescriptor bitmap= BitmapDescriptorFactory.fromResource(R.mipmap.ic_lo);
-        OverlayOptions options = new MarkerOptions().position(cenpt).icon(bitmap);
         //将maker添加到地图
-        mapView.getMap().addOverlay(options);
+        //不要在主线程添加太费时的事件
+        //不能在子线程更新界面
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpDataLoader dataLoader=new HttpDataLoader();
+                String shopJsonData= dataLoader.getHtml("http://file.nidama.net/class/mobile_develop/data/bookstore2022.json");
+                List<ShopLocation> locations=dataLoader.ParseJsonData(shopJsonData);
+                BitmapDescriptor bitmap= BitmapDescriptorFactory.fromResource(R.mipmap.ic_lo);
+                for(ShopLocation shop:locations){
+                    LatLng shopPoint=new LatLng(shop.getLatitude(),shop.getLongitude());
+                    OverlayOptions options = new MarkerOptions().position(shopPoint).icon(bitmap);//图片
+                    mapView.getMap().addOverlay(options);
+                    //文字
+                    mapView.getMap().addOverlay(new TextOptions().bgColor(0xAAFFFF00)
+                            .fontSize(32)
+                            .fontColor(0xFFFF00FF).text(shop.getName()).position(shopPoint));
+                }
 
+            }
+        }).start();
+        //设置点击事件
+        mapView.getMap().setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Toast.makeText(BaiduMapFragment.this.getContext(), "Marker clicked", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
         return rootView;
     }
     @Override
