@@ -71,23 +71,21 @@ public class BaiduMapFragment extends Fragment {
         //将maker添加到地图
         //不要在主线程添加太费时的事件
         //不能在子线程更新界面
+        //线程不要动界面的东西，不要更新view，由子线程切换到UI线程
         new Thread(new Runnable() {
             @Override
             public void run() {
+                //在子线程下载数据
                 HttpDataLoader dataLoader=new HttpDataLoader();
                 String shopJsonData= dataLoader.getHtml("http://file.nidama.net/class/mobile_develop/data/bookstore2022.json");
                 List<ShopLocation> locations=dataLoader.ParseJsonData(shopJsonData);
-                BitmapDescriptor bitmap= BitmapDescriptorFactory.fromResource(R.mipmap.ic_lo);
-                for(ShopLocation shop:locations){
-                    LatLng shopPoint=new LatLng(shop.getLatitude(),shop.getLongitude());
-                    OverlayOptions options = new MarkerOptions().position(shopPoint).icon(bitmap);//图片
-                    mapView.getMap().addOverlay(options);
-                    //文字
-                    mapView.getMap().addOverlay(new TextOptions().bgColor(0xAAFFFF00)
-                            .fontSize(32)
-                            .fontColor(0xFFFF00FF).text(shop.getName()).position(shopPoint));
-                }
-
+                //在UI更新界面
+                BaiduMapFragment.this.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AddMarkersOnMap(locations);
+                    }
+                });
             }
         }).start();
         //设置点击事件
@@ -100,6 +98,20 @@ public class BaiduMapFragment extends Fragment {
         });
         return rootView;
     }
+
+    private void AddMarkersOnMap(List<ShopLocation> locations) {
+        BitmapDescriptor bitmap= BitmapDescriptorFactory.fromResource(R.mipmap.ic_lo);
+        for(ShopLocation shop: locations){
+            LatLng shopPoint=new LatLng(shop.getLatitude(),shop.getLongitude());
+            OverlayOptions options = new MarkerOptions().position(shopPoint).icon(bitmap);//图片
+            mapView.getMap().addOverlay(options);
+            //文字
+            mapView.getMap().addOverlay(new TextOptions().bgColor(0xAAFFFF00)
+                    .fontSize(32)
+                    .fontColor(0xFFFF00FF).text(shop.getName()).position(shopPoint));
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
