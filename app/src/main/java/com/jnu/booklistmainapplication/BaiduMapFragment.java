@@ -4,6 +4,9 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +26,9 @@ import com.baidu.mapapi.model.LatLng;
 import com.jnu.booklistmainapplication.Data.HttpDataLoader;
 import com.jnu.booklistmainapplication.Data.ShopLocation;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.LogRecord;
 
 public class BaiduMapFragment extends Fragment {
 
@@ -67,7 +72,6 @@ public class BaiduMapFragment extends Fragment {
                 .build();
         //定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
         mapView.getMap().setMapStatus(MapStatusUpdateFactory.newMapStatus(mMapStatus));
-
         //将maker添加到地图
         //不要在主线程添加太费时的事件
         //不能在子线程更新界面
@@ -78,14 +82,17 @@ public class BaiduMapFragment extends Fragment {
                 //在子线程下载数据
                 HttpDataLoader dataLoader=new HttpDataLoader();
                 String shopJsonData= dataLoader.getHtml("http://file.nidama.net/class/mobile_develop/data/bookstore2022.json");
-                List<ShopLocation> locations=dataLoader.ParseJsonData(shopJsonData);
+                ArrayList<ShopLocation> locations=dataLoader.ParseJsonData(shopJsonData);
                 //在UI更新界面
-                BaiduMapFragment.this.getActivity().runOnUiThread(new Runnable() {
+                Handler mainHandler = new Handler(Looper.getMainLooper());
+                mainHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        //已在主线程中，可以更新UI
                         AddMarkersOnMap(locations);
                     }
                 });
+
             }
         }).start();
         //设置点击事件

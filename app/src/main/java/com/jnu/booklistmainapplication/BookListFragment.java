@@ -31,6 +31,7 @@ public class BookListFragment extends Fragment {
     private BookListFragment.MainRecycleViewAdapter mainRecycleViewAdapter;
     public static final int MENU_ID_ADD = 1;
     public static final int MENU_ID_DELETE = 2;
+    public static final int MENU_ID_UPDATE = 3;
 
     private ActivityResultLauncher<Intent> addDataLauncher= registerForActivityResult(new ActivityResultContracts.StartActivityForResult()
             ,result -> {
@@ -44,6 +45,22 @@ public class BookListFragment extends Fragment {
                         books.add(position, new Book(title,R.drawable.book_no_name) );
                         new DataSaver().Save(this.getContext(),books);
                         mainRecycleViewAdapter.notifyItemInserted(position);
+                    }
+                }
+            });
+    private ActivityResultLauncher<Intent> updateDataLauncher= registerForActivityResult(new ActivityResultContracts.StartActivityForResult()
+            ,result -> {
+                if(null!=result){
+                    Intent intent=result.getData();
+                    //使用result.getResultCode()判断数据来源哪个Activity
+                    if(result.getResultCode()==EditBookActivity.RESULT_CODE_SUCCESS)
+                    {//创建一个包含所有 extra 数据的 Bundle 对象，然后使用 putExtras() 将 Bundle 插入 Intent 中。
+                        Bundle bundle=intent.getExtras();
+                        String title= bundle.getString("title");
+                        int position=bundle.getInt("position");
+                        books.get(position).setTitle(title);
+                        new DataSaver().Save(this.getContext(),books);
+                        mainRecycleViewAdapter.notifyItemChanged(position);
                     }
                 }
             });
@@ -121,6 +138,12 @@ public class BookListFragment extends Fragment {
                         }).create();
                 alertDialog.show();
                 break;
+            case MENU_ID_UPDATE:
+                Intent intentUpdate=new Intent(this.getContext(),EditBookActivity.class);
+                intentUpdate.putExtra("position",item.getOrder());
+                intentUpdate.putExtra("title",books.get(item.getOrder()).getTitle());
+                updateDataLauncher.launch(intentUpdate);
+                break;
         }
         return super.onContextItemSelected(item);
     }
@@ -154,6 +177,7 @@ public class BookListFragment extends Fragment {
             public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
                 contextMenu.add(0,MENU_ID_ADD,getAdapterPosition(),"Add "+getAdapterPosition());
                 contextMenu.add(0,MENU_ID_DELETE,getAdapterPosition(),"Delete "+getAdapterPosition());
+                contextMenu.add(0,MENU_ID_UPDATE,getAdapterPosition(),"Update"+getAdapterPosition());
             }
         }
 

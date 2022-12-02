@@ -36,6 +36,7 @@ public class EditBookActivity extends AppCompatActivity {
                 bundle.putInt("position",position );
 
                 intent .putExtras(bundle);
+                //向上一个Activity传回数据
                 setResult(RESULT_CODE_SUCCESS,intent);
                 EditBookActivity.this.finish();
             }

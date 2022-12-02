@@ -48,9 +48,9 @@ public class HttpDataLoader {
     }
     @NonNull
     //解析数据
-    public List<ShopLocation> ParseJsonData(String JsonText)
+    public ArrayList<ShopLocation> ParseJsonData(String JsonText)
     {
-        List<ShopLocation> locations=new ArrayList<>();
+        ArrayList<ShopLocation> locations=new ArrayList<>();
         try {
             //root是对象，其有一个shops属性
             JSONObject root = new JSONObject(JsonText);

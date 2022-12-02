@@ -9,6 +9,8 @@ import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
+
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public GameView(Context context) {
         super(context);
@@ -36,10 +38,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
    }
     private SurfaceHolder surfaceHolder;
     private DrawThread drawThread=null;
+    private ArrayList<Spriter> spriterArrayList=new ArrayList<>();
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
         //Callback和Surface联系起来
         this.getHolder().addCallback(this);
+        for(int i=0;i<5;++i)
+        {
+            Spriter spriter=new Spriter(this.getContext());
+            spriter.setX(i*50);
+            spriter.setY(i*50);
+            spriter.setDirection((float) (Math.random()*2*Math.PI));
+            spriterArrayList.add(spriter);
+        }
         drawThread=new DrawThread();
         drawThread.start();
     }
@@ -72,6 +83,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 try {
                     canvas=surfaceHolder.lockCanvas();//画布
                     canvas.drawColor(Color.GRAY);//画布背景
+                    //先移动，后画
+                    for (Spriter spriter: spriterArrayList) {
+                        spriter.move(canvas.getHeight(), canvas.getWidth());
+                    }
+                    for (Spriter spriter: spriterArrayList) {
+                        spriter.draw(canvas);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }finally {

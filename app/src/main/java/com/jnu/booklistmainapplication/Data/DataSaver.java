@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class DataSaver {
     public void Save(Context context, ArrayList<Book>data){
         try {
+            //为默认操作模式，代表该文件是私有数据，只能被应用本身访问,在该模式下，写入的内容会覆盖原文件的内容
             FileOutputStream dataStream= context.openFileOutput("mydata.dat",Context.MODE_PRIVATE);
             ObjectOutputStream out=new ObjectOutputStream(dataStream);
             out.writeObject(data);
